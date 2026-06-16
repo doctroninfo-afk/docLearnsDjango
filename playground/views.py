@@ -17,5 +17,3 @@ def say_hello(request):
     # return HttpResponse('Hello World')
     x = calculate()
     return render(request, 'hello.html', {'name' : 'Nistha'})
-
- 
