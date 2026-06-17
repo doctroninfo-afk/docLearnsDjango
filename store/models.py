@@ -38,7 +38,7 @@ class Customer(models.Model):
         (MEMBERSHIP_SILVER, 'Silver'),
         (MEMBERSHIP_GOLD, 'Gold')
     ]
-    first_name = models.CharField(max_length=255)
+    given_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=255)
@@ -55,7 +55,7 @@ class Order(models.Model):
         (PAYMENT_FAILED, 'Failed')
     ]
     placed_at = models.DateTimeField(auto_now_add=True)
-    payment_status = models.CharField(
+    payment_status = models.CharField( 
         max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_PENDING)
     customer = models.ForeignKey(
         Customer, on_delete=models.PROTECT
