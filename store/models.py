@@ -15,6 +15,12 @@ class Collection(models.Model):
     featured_product = models.ForeignKey(
         'Product', on_delete = models.SET_NULL, null=True, related_name='+'
     )
+    
+    def __str__(self) -> str:
+        return self.collection_name
+
+    class Meta:
+        ordering = ['collection_name']
 
 class Product(models.Model):
     title = models.CharField(max_length=255) 
@@ -28,7 +34,12 @@ class Product(models.Model):
     )
     promotions = models.ManyToManyField(
         Promotion)
+    
+    def __str__(self)-> str:
+        return self.title
 
+    class Meta:
+        ordering = ['title']
 class Customer(models.Model):
     MEMBERSHIP_BRONZE = 'B'
     MEMBERSHIP_SILVER = 'S'
@@ -44,6 +55,12 @@ class Customer(models.Model):
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
+
+    def __str__(self) -> str:
+        return self.given_name
+    
+    class Meta:
+        ordering = ['given_name']
 
 class Order(models.Model):
     PAYMENT_PENDING = 'P'
