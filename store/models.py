@@ -1,4 +1,7 @@
+from django.core.validators import MinValueValidator
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
+from tags.models import TaggedItem
 
 # Create your models here.
 
@@ -25,15 +28,19 @@ class Collection(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=255) 
     slug = models.SlugField()
-    description = models.TextField()
-    unit_price = models.DecimalField(max_digits=6, decimal_places=2) #For monetary values
+    description = models.TextField(null=True, blank=True)
+    unit_price = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        validators=[MinValueValidator(1)]) #For monetary values
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(
         Collection, on_delete=models.PROTECT
     )
     promotions = models.ManyToManyField(
-        Promotion)
+        Promotion, blank=True)
+    tags = GenericRelation(TaggedItem)
     
     def __str__(self)-> str:
         return self.title
@@ -57,10 +64,10 @@ class Customer(models.Model):
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
 
     def __str__(self) -> str:
-        return self.given_name
+        return f'{self.given_name} {self.last_name}'
     
     class Meta:
-        ordering = ['given_name']
+        ordering = ['given_name', 'last_name']
 
 class Order(models.Model):
     PAYMENT_PENDING = 'P'
@@ -77,6 +84,7 @@ class Order(models.Model):
     customer = models.ForeignKey(
         Customer, on_delete=models.PROTECT
     )
+
     
 class OrderItem(models.Model):
     order = models.ForeignKey(
